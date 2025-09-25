@@ -18,7 +18,7 @@ function App() {
       return;
     }
     try {
-      const { data } = await axios.get("/api/users/me", {
+      const { data } = await axios.get(`https://full-stack-backend-6e0h.onrender.com/api/users/register`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUser(data);

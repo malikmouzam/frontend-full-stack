@@ -17,6 +17,7 @@ const Register = ({ setUser }) => {
         email,
         password,
       });
+      console.log('testing')
       localStorage.setItem("token", data.token);
       setUser(data);
       navigate("/");

@@ -12,7 +12,7 @@ const Register = ({ setUser }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.post(`${process.env.VITE_APP_BACKEND_URL}/api/users/register`, {
+      const { data } = await axios.post(`https://full-stack-backend-6e0h.onrender.com/api/users/register`, {
         username,
         email,
         password,

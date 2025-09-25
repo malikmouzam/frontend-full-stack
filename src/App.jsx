@@ -14,7 +14,7 @@ function App() {
   const fetchUser = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
-      setLoading(false); // <- make sure to stop loading
+      setLoading(false); 
       return;
     }
     try {

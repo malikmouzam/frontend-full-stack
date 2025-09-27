@@ -4,4 +4,11 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  server: {
+    proxy: {
+      "/api": {
+        target: "https://full-stack-backend-5-dm0x.onrender.com",
+      },
+    },
+  },
 })

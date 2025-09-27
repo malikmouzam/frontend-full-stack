@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import api from "../api";
+import axios from "axios";
 
-const Login = () => {
+const Login = ({ setUser }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -11,53 +11,66 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await api.post("/users/login", { email, password });
+      const { data } = await axios.post("/api/users/login", {
+        email,
+        password,
+      });
       localStorage.setItem("token", data.token);
+      setUser(data);
       navigate("/");
-    } catch {
-      setError("Invalid email or password");
+    } catch (error) {
+      setError(error.response?.data?.message || "Server error");
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-[#0A0F17]">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-[#0E1522] p-6 rounded-2xl shadow-xl w-full max-w-md outline outline-1 outline-[#8AA0FF1a]"
-      >
-        <h2 className="text-2xl font-bold text-[#EAF2FF] mb-4 text-center">
+    <div className="min-h-[80vh] w-full bg-[#0A0F17] px-4 py-12">
+      <div className="mx-auto w-full max-w-md rounded-2xl bg-[#0E1522] p-6 shadow-xl outline outline-1 outline-[#8AA0FF1a]">
+        <h2 className="mb-6 text-center text-2xl font-semibold tracking-tight text-[#EAF2FF]">
           Login
         </h2>
-        {error && <p className="text-[#FF6A8F] mb-3 text-center">{error}</p>}
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          className="w-full p-3 mb-3 rounded-xl bg-[#0A0F17] text-[#EAF2FF] border border-[#8AA0FF33] focus:outline-none focus:border-[#8AA0FF] placeholder-[#9BB0C9]"
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          className="w-full p-3 mb-4 rounded-xl bg-[#0A0F17] text-[#EAF2FF] border border-[#8AA0FF33] focus:outline-none focus:border-[#8AA0FF] placeholder-[#9BB0C9]"
-        />
-        <button
-          type="submit"
-          className="w-full bg-gradient-to-br from-[#78F5DA] to-[#8AA0FF] text-[#061017] font-semibold py-3 rounded-xl hover:opacity-90 transition"
-        >
-          Login
-        </button>
-        <p className="text-center text-[#9BB0C9] mt-4">
-          Don’t have an account?{" "}
-          <Link to="/register" className="text-[#A987FF] hover:underline">
+
+        {error && (
+          <p className="mb-4 rounded-lg border border-[#FF6A8F]/30 bg-[#FF6A8F]/10 px-3 py-2 text-center text-sm text-[#FF6A8F]">
+            {error}
+          </p>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email"
+              className="w-full rounded-xl border border-[#8AA0FF33] bg-[#0A0F17] px-3 py-2 text-[#EAF2FF] placeholder:text-[#9BB0C9] shadow-sm outline-none transition focus:border-[#8AA0FF] focus:ring-2 focus:ring-[#8AA0FF]"
+              required
+            />
+          </div>
+          <div>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Password"
+              className="w-full rounded-xl border border-[#8AA0FF33] bg-[#0A0F17] px-3 py-2 text-[#EAF2FF] placeholder:text-[#9BB0C9] shadow-sm outline-none transition focus:border-[#8AA0FF] focus:ring-2 focus:ring-[#8AA0FF]"
+              required
+            />
+          </div>
+          <button
+            className="w-full rounded-xl bg-gradient-to-br from-[#78F5DA] to-[#8AA0FF] py-2 text-sm font-medium text-[#061017] shadow-md ring-1 ring-white/10 transition hover:opacity-90 active:scale-[.99]"
+          >
+            Login
+          </button>
+        </form>
+
+        <p className="mt-4 text-center text-sm text-[#9BB0C9]">
+          Don't have an account?{" "}
+          <Link className="font-medium text-[#A987FF] hover:underline" to="/register">
             Register
           </Link>
         </p>
-      </form>
+      </div>
     </div>
   );
 };

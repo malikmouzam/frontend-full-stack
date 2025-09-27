@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import api from "../api";
+import axios from "axios";
 import NoteModal from "./NoteModal";
 import { useLocation } from "react-router-dom";
 
@@ -20,7 +20,7 @@ const Home = () => {
       const searchParams = new URLSearchParams(location.search);
       const search = searchParams.get("search") || "";
 
-      const { data } = await api.get("/notes", {
+      const { data } = await axios.get("/api/notes", {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -67,7 +67,7 @@ const Home = () => {
         setError("No authentication token found. Please log in");
         return;
       }
-      await api.delete(`/notes/${id}`, {
+      await axios.delete(`/api/notes/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setNotes((prev) => prev.filter((note) => note._id !== id));
@@ -94,9 +94,7 @@ const Home = () => {
         onClick={() => setIsModalOpen(true)}
         className="fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-br from-[#78F5DA] to-[#8AA0FF] text-[#061017] text-3xl rounded-full shadow-lg hover:opacity-90 ring-1 ring-white/10 flex items-center justify-center"
       >
-        <span className="flex items-center justify-center h-full w-full pb-1">
-          +
-        </span>
+        <span className="flex items-center justify-center h-full w-full pb-1">+</span>
       </button>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

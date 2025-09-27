@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import api from "../api";
+import axios from "axios";
 
 const NoteModal = ({ isOpen, onClose, note, onSave }) => {
   const [title, setTitle] = useState("");
@@ -23,21 +23,24 @@ const NoteModal = ({ isOpen, onClose, note, onSave }) => {
 
       const payload = { title, description };
       const config = { headers: { Authorization: `Bearer ${token}` } };
-
       if (note) {
-        const { data } = await api.put(`/notes/${note._id}`, payload, config);
+        const { data } = await axios.put(
+          `/api/notes/${note._id}`,
+          payload,
+          config
+        );
         onSave(data);
       } else {
-        const { data } = await api.post("/notes", payload, config);
+        const { data } = await axios.post("/api/notes", payload, config);
         onSave(data);
       }
-
       setTitle("");
       setDescription("");
       setError("");
       onClose();
-    } catch {
-      setError("Failed to save note");
+    } catch (err) {
+      console.log("Note save error");
+      setError("Failed to save error");
     }
   };
 
@@ -68,22 +71,28 @@ const NoteModal = ({ isOpen, onClose, note, onSave }) => {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <input
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="Note title"
-              className="w-full rounded-xl border border-[#8AA0FF33] bg-[#0A0F17] px-3 py-2 text-[#EAF2FF] placeholder:text-[#9BB0C9] shadow-sm outline-none transition focus:border-[#8AA0FF] focus:ring-2 focus:ring-[#8AA0FF]"
-              required
-            />
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Note description"
-              className="w-full rounded-xl border border-[#8AA0FF33] bg-[#0A0F17] px-3 py-2 text-[#EAF2FF] placeholder:text-[#9BB0C9] shadow-sm outline-none transition focus:border-[#8AA0FF] focus:ring-2 focus:ring-[#8AA0FF]"
-              rows={4}
-              required
-            />
+            <div>
+              <input
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Note title"
+                className="w-full rounded-xl border border-[#8AA0FF33] bg-[#0A0F17] px-3 py-2 text-[#EAF2FF] placeholder:text-[#9BB0C9] shadow-sm outline-none transition focus:border-[#8AA0FF] focus:ring-2 focus:ring-[#8AA0FF]"
+                required
+              />
+            </div>
+            <div>
+              <textarea
+                type="text"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Note description"
+                className="w-full rounded-xl border border-[#8AA0FF33] bg-[#0A0F17] px-3 py-2 text-[#EAF2FF] placeholder:text-[#9BB0C9] shadow-sm outline-none transition focus:border-[#8AA0FF] focus:ring-2 focus:ring-[#8AA0FF]"
+                rows={4}
+                required
+              />
+            </div>
+
             <div className="mt-2 flex gap-2">
               <button
                 type="submit"
